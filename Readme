@@ -1,0 +1,90 @@
+NAME: CSE522 Assignment 4
+_______________________________________________________________________________________________________________________________________________________________________________________________________
+
+TEAM-02
+ 
+Hena Shah (1213348511)
+Nidhi Dubey(1213031246)
+_______________________________________________________________________________________________________________________________________________________________________________________________________
+
+REPOSITORY CONTENTS:
+
+-> README 
+-> HCSR_app
+-> hcr04
+-> FC256
+-> REPORT
+-> KConfig (to paste inside /zephyr/driver/sensor)
+-> CMakeLists (to paste inside /zephyr/driver/sensor)
+_______________________________________________________________________________________________________________________________________________________________________________________________________
+
+ABOUT: 
+We have developed a distance sensor channel for HC-SR04 and an I2Cbased EEPROM device driver (a Microchip 24FC256 CMOS EEPROM) in Zephyr RTOS running on Galileo
+Gen 2. When the Galileo board is booted up, two instances of HC-SR04 sensor instances (HCSR0 and HCSR1) and one instance of EEPROM device are created. We are reading the distance via the HC-SR04 sensor and recording the distance and the timestamp in EEPROM. The user is required to enter shell module commands to select the sensor and then to read/write data into EEPROM. Below is the description for shell module commands:
+->Enable n (n=0, 1, or 2, to enable none, HCSR0, or HCSR1)
+->Start p (to erase all pages of the EEPROM and to start collecting and recording distancemeasures from page 0. The operation stops until p pages of EEPROM are filled, where p<=512.)
+->Dump p1 p2 (p1<=p2, to dump (print out) the distance measures recorded in pages p1 to p2 on console).
+
+
+_______________________________________________________________________________________________________________________________________________________________________________________________________
+
+SYSTEM REQUIREMENTS:
+
+-> 2 HC-SR04 sensors
+-> Microchip 24FC256 CMOS EEPRO
+-> LINUX KERNEL : Minimum version of 2.6.19 is expected.
+-> Zephyr 1.10.0 and SDK: Zephyr-0.9.2
+-> CMake version 3.8.2 or higher is required
+-> Intel Galileo Gen2
+____________________________________________________________________________________________________________________________________________________________________________________________________
+
+SETUP:
+-> Extract the HCSR_app into /zephyr/samples
+-> Extract the hcsr04 into /zephyr/drivers/sensor. Make changes accordingly in Kconfig and CMakeLists in /zephyr/drivers/sensor (You may find that file in CSE5222_team2_assgn04)
+-> Copy the files in FC256 into /zephyr/drivers/flash
+
+-> Install zephyr using the guidelines on: http://docs.zephyrproject.org/1.10.0/getting_started/installation_linux.html
+-> After installing Zephyr, format a microSD as FAT
+-> Create the following directories
+   efi
+   efi/boot
+   kernel
+-> after cloning find the binary at $ZEPHYR_BASE/boards/x86/galileo/support/grub/bin/grub.efi and copy it to $SDCARD/efi/boot and rename it to bootia32.efi.
+-> Create a $SDCARD/efi/boot/grub.cfg file containing: 
+   set default=0
+   set timeout=10
+
+   menuentry "Zephyr Kernel" {
+   multiboot /kernel/zephyr.strip
+   }
+
+
+
+-> Connect SDA(IO18) and SCL(IO19) of Galileo board to SCL(pin6) and SDA(pin5) of EEPROM. In pinmux.c SCL and SDA are low down, and according to EEPROM ot has to be pullup. So we are configure the pins as pull up 
+-> Write protection bit is IO0
+-> A2,A1,A0 are connected to ground.
+-> For sensor 1, TRIGGER is at IO1 and ECHO is at IO2
+-> For sensor 2, TRIGGER is at IO1 and ECHO is at IO2
+-> Connect GPIO pins on Galileo Gen 2, IO5 is PWM and IO0 is input pin.
+
+For full details refer this:  http://docs.zephyrproject.org/1.10.0/boards/x86/galileo/doc/galileo.html
+
+_______________________________________________________________________________________________________________________________________________________________________________________________________
+
+COMPILATION & EXECUTION:
+
+-> type: cd $ZEPHYR_BASE/samples/measure_n/build
+-> cmake -DBOARD=galileo ..
+-> make
+
+Now copy zephyr.strip file to in $ZEPHYR_BASE/samples/measure_n/build/zephyr to $SDCARD/kernel and put in board and reboot.
+
+Once all the tasks execute and ask you to enter shell commnands type:
+-> select my_shell   
+-> Then to enable or select sensor type: enable n 
+-> Then to erase all values and write to sendors type: start p
+-> Then to start reading the values type: Dump p1 p2
+( for the description of these commands see about in ABOUT section) 
+___________________________________________________________________________________________________________________________________________________________________________________________________________
+
+
