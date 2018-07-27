@@ -1,0 +1,22 @@
+menuconfig HCSR
+	bool
+	prompt "HCSR Sensor"
+	default n
+	help
+	  Enable driver for HCSR sensors.
+
+config HCSR_NAME_0
+	string
+	prompt "Driver name"
+	default "HCSR0"
+	depends on HCSR
+	help
+	  Device name with which the HCSR sensor is identified.
+
+config HCSR_NAME
+	string
+	prompt "Driver name"
+	default "HCSR1"
+	depends on HCSR
+	help
+	  Device name with which the HCSR sensor is identified.

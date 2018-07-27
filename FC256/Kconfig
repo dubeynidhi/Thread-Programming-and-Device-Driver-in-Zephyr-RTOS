@@ -1,0 +1,202 @@
+# Kconfig - Flash driver configuration options
+
+#
+# Copyright (c) 2016 Intel Corporation
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+
+#
+# Flash driver
+#
+# Kconfig - Flash driver configuration options
+
+#
+# Copyright (c) 2016 Intel Corporation
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+
+#
+# Flash driver
+#
+menuconfig FLASH
+	bool
+	prompt "Flash hardware support"
+	default n
+	help
+	  Enable support for the flash hardware.
+
+config FLASH_PAGE_LAYOUT
+	bool "API for retrieving the layout of pages"
+	depends on FLASH
+	default n
+	help
+	  Enables API for retrieving the layout of flash memory pages.
+
+config SPI_FLASH_W25QXXDV
+	bool
+	prompt "SPI NOR Flash Winbond W25QXXDV"
+	depends on SPI && FLASH
+
+config SPI_FLASH_W25QXXDV_SPI_NAME
+	string
+	prompt "SPI controller device name"
+	depends on SPI_FLASH_W25QXXDV
+	default ""
+
+config SPI_FLASH_W25QXXDV_DRV_NAME
+	string
+	prompt "SPI flash device name"
+	depends on SPI_FLASH_W25QXXDV
+	default "W25QXXDV"
+
+config SPI_FLASH_W25QXXDV_INIT_PRIORITY
+	int
+	depends on SPI_FLASH_W25QXXDV
+	default 80
+	help
+	  Device driver initialization priority.
+	  Device is connected to SPI bus, it has to
+	  be initialized after SPI driver.
+
+config SPI_FLASH_W25QXXDV_SPI_FREQ_0
+	int "SPI system frequency"
+	depends on SPI_FLASH_W25QXXDV
+	default 4
+	help
+	  This option sets the SPI controller's frequency. Beware this value
+	  depends on the SPI controller being used and also on the system
+	  clock.
+
+config	SPI_FLASH_W25QXXDV_SPI_SLAVE
+	int "SPI slave linked to SPI flash"
+	depends on SPI_FLASH_W25QXXDV
+	help
+	  This option sets the SPI slave number the SPI controller has to switch
+	  to when dealing with WinBond SPI flash chip.
+
+config SPI_FLASH_W25QXXDV_FLASH_SIZE
+	int "Flash size in bytes"
+	depends on SPI_FLASH_W25QXXDV
+	default 2097152
+	help
+	  This is the flash capacity in bytes.
+
+config SPI_FLASH_W25QXXDV_MAX_DATA_LEN
+	int
+	range 1 256
+	depends on SPI_FLASH_W25QXXDV
+	default 256
+	help
+	  Maximum transmit or receive data length in one user data frame.
+
+config SOC_FLASH_QMSI
+	bool
+	prompt "QMSI flash driver"
+	depends on QMSI && FLASH
+	default n
+	help
+	  Enable QMSI Quark flash driver.
+
+config SOC_FLASH_QMSI_DEV_NAME
+	string "QMSI flash device name"
+	depends on SOC_FLASH_QMSI
+	default "QUARK_FLASH"
+	help
+	  Specify the device name for the flash driver.
+
+config SOC_FLASH_QMSI_CLK_COUNT_US
+	int "System clk count per microsecond"
+	depends on SOC_FLASH_QMSI
+	default 32
+	help
+	  Specify the system clk cycles per microsecond.
+
+config SOC_FLASH_QMSI_WAIT_STATES
+	int "The number of flash wait states"
+	depends on SOC_FLASH_QMSI
+	default 1
+	help
+	  Specify the number of wait states for Quark flash.
+
+config SOC_FLASH_QMSI_SYS_SIZE
+	hex "SOC system flash size"
+	depends on SOC_FLASH_QMSI
+	help
+	  Specify system flash size on the Quark SOC.
+
+config SOC_FLASH_QMSI_API_REENTRANCY
+	bool
+	prompt "flash driver API reentrancy for QMSI shim driver"
+	depends on SOC_FLASH_QMSI
+	default n
+	help
+	 Enable support for QMSI flash driver API reentrancy.
+
+config SOC_FLASH_NRF5
+	bool "Nordic Semiconductor nRF5X flash driver"
+	depends on FLASH && SOC_FAMILY_NRF5
+	default n
+	help
+	  Enables Nordic Semiconductor nRF5X flash driver.
+
+config SOC_FLASH_NRF5_DEV_NAME
+	string "Nordic nRF5X flash device name"
+	depends on SOC_FLASH_NRF5
+	default "NRF5_FLASH"
+	help
+	  Specify the device name for the flash driver.
+
+config SOC_FLASH_NRF5_RADIO_SYNC
+	bool "Nordic nRF5x flash driver synchronized with radio"
+	depends on SOC_FLASH_NRF5 && BT_CTLR
+	default y
+	help
+	  Enable synchronization between flash memory driver and radio.
+
+config SOC_FLASH_MCUX
+	bool "MCUX flash shim driver"
+	depends on FLASH && HAS_MCUX
+	default n
+	help
+	  Enables the MCUX flash shim driver.
+	  WARNING: This driver will disable the system interrupts for
+	  the duration of the flash erase/write operations. This will
+	  have an impact on the overall system performance - whether
+	  this is acceptable or not will depend on the use case.
+
+config SOC_FLASH_MCUX_DEV_NAME
+	string "MCUX flash device name"
+	depends on SOC_FLASH_MCUX
+	default "MCUX_FLASH"
+	help
+	  Specify the device name for the flash driver.
+
+menuconfig FC256
+	bool
+	prompt "fc256 driver"
+	depends on I2C && FLASH
+	default y
+	help
+	 Enable FC256 driver configuration.
+
+config FC256_DRV_NAME
+	string "FC256 flash driver name"
+	depends on FC256
+	default "FC256_NAME"
+	help
+	 Specify the device name for the flash driver.
+
+config FC256_I2C_MASTER
+	string	
+	depends on FC256
+	default "I2C_0"
+	help
+	 Name of I2C bus to be used by the driver 
+
+
+source "drivers/flash/Kconfig.stm32"
+
+#endmenu
+

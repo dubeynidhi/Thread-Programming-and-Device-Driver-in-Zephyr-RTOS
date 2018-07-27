@@ -1,0 +1,14 @@
+sample:
+  description: TBD
+    application
+  name: TBD
+  platforms: all
+tests:
+  - test:
+      build_only: true
+      tags: samples tests
+  - singlethread:
+      build_only: true
+      extra_args: CONF_FILE=prj_single.conf
+      filter: CONFIG_UART_CONSOLE and CONFIG_SERIAL_SUPPORT_INTERRUPT
+      tags: samples tests
