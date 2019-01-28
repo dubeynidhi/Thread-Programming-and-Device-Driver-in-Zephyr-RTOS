@@ -10,8 +10,7 @@ REPOSITORY CONTENTS:
 -> CMakeLists (to paste inside /zephyr/driver/sensor)
 _____________________________________________________________________________________________________________________________
 ABOUT: 
-We have developed a distance sensor channel for HC-SR04 and an I2Cbased EEPROM device driver (a Microchip 24FC256 CMOS EEPROM) in Zephyr RTOS running on Galileo
-Gen 2. When the Galileo board is booted up, two instances of HC-SR04 sensor instances (HCSR0 and HCSR1) and one instance of EEPROM device are created. We are reading the distance via the HC-SR04 sensor and recording the distance and the timestamp in EEPROM. The user is required to enter shell module commands to select the sensor and then to read/write data into EEPROM. Below is the description for shell module commands:
+We have developed a distance sensor channel for HC-SR04 and an I2Cbased EEPROM device driver (a Microchip 24FC256 CMOS EEPROM) in Zephyr RTOS running on Galileo Gen 2. When the Galileo board is booted up, two instances of HC-SR04 sensor instances (HCSR0 and HCSR1) and one instance of EEPROM device are created. We are reading the distance via the HC-SR04 sensor and recording the distance and the timestamp in EEPROM. The user is required to enter shell module commands to select the sensor and then to read/write data into EEPROM. Below is the description for shell module commands:
 ->Enable n (n=0, 1, or 2, to enable none, HCSR0, or HCSR1)
 ->Start p (to erase all pages of the EEPROM and to start collecting and recording distancemeasures from page 0. The operation stops until p pages of EEPROM are filled, where p<=512.)
 ->Dump p1 p2 (p1<=p2, to dump (print out) the distance measures recorded in pages p1 to p2 on console).
