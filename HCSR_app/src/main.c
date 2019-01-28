@@ -70,14 +70,8 @@ struct k_thread thread_data, thread_data1;
 
 
 
-/*Fucntion to read distance and time stamp from sensor and store it in a buffer to be written to EEPROM. This thread has higher priority than thread which
-will write values into EEPROM. When we enter 'start p' as shell command, this function  will be executed after erasing all values in EEPROM. To synchronize 
-threads such that thread 2 ececutes after thread 1 comletes reading all values, we have used semaaphore. */
-/* Since our page size is 64 bytes and each distance measurement and timestamp is 32 bits each (4 bytes each), hence for one measurement it takes 
-8 bytes so in a page of 64 bytes we can enter 8 measurements. So in this loop in one iteration we store first the distance and then the timestamp.
-Hence buffer has 16 values and loop is increment in steps of 2 everytime. 
-sensor_sample_Ftech will trigger sensor, and sensor_channel_get will get the distance value from sensor
-We are taking timestamp before triggering the sensor and then again after we get the distance. The difference is our final timestamp value */
+/*Fucntion to read distance and time stamp from sensor and store it in a buffer to be written to EEPROM. This thread has higher priority than thread which will write values into EEPROM. When we enter 'start p' as shell command, this function  will be executed after erasing all values in EEPROM. To synchronize threads such that thread 2 ececutes after thread 1 comletes reading all values, we have used semaaphore. */
+/* Since our page size is 64 bytes and each distance measurement and timestamp is 32 bits each (4 bytes each), hence for one measurement it takes 8 bytes so in a page of 64 bytes we can enter 8 measurements. So in this loop in one iteration we store first the distance and then the timestamp. Hence buffer has 16 values and loop is increment in steps of 2 everytime. sensor_sample_Ftech will trigger sensor, and sensor_channel_get will get the distance value from sensor We are taking timestamp before triggering the sensor and then again after we get the distance. The difference is our final timestamp value */
 void thread1(void* a ,void* b,void* c)
 {
 	int i;
